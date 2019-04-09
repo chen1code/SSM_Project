@@ -1,0 +1,70 @@
+.content-center{
+	position: absolute;
+	width: 500px;
+	height: 300px;
+	padding: 20px;
+	top: calc(50% - 150px);
+	left: calc(50% - 250px);
+	box-shadow: 0 0 10px #C0C0C0;
+	border-radius: 10px;
+}
+.content-center-title{
+	text-align: center;
+	font-size: 25px;
+	font-weight: bold;
+	margin-bottom: 40px;
+}
+.input-block{
+	width: 300px;
+	margin: auto;
+	margin-bottom: 10px;
+}
+.input-block input{
+	display: block;
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 0 10px;
+	line-height: 38px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+}
+.input-block input#password{
+	margin-bottom: 0
+}
+.wrong-tip{
+	visibility: hidden;
+	color: #ed5565
+}
+.btn-login{
+	width: 300px;
+	margin: auto;
+	margin-bottom: 5px;
+}
+.hint-text{
+	color: #C0C0C0;
+	text-align: center;
+}
+.hint-text a{
+	color: #d9534f;
+}
+#confirmModal .confirm-hint{
+	font-size: 20px
+}
+/* 成功提示框 */
+.success-alert{
+	display: none;
+	position: fixed;
+	width: 200px;
+	top: 200px;
+	left: calc(50% - 100px);
+	text-align: center;
+}
+/* 完善input与select之间的间距 */
+#addCurriculumForm{
+	width: 50%;
+	margin: auto
+}
+#addCurriculumForm input{
+	margin-bottom : 15px;
+	border-radius: 5px
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.erp.inter.IUserOperation">
+	<!-- 查询 -->
+	<select id="selectUserByAccountName" parameterType="string" resultType="Users">
+        select * from `users` where account = #{account}
+    </select>
+    <!-- 根据账号查询所属学院 -->
+    <select id="selectSchoolByAccount" parameterType="string" resultType="String" >
+    	select toSchoolNumber from users where account=#{account};
+    </select>
+    <!-- addUser -->
+    <insert id="addUsers" parameterType="Users" 
+        useGeneratedKeys="true" keyProperty="id"> 
+        insert into users(account,password,userName,toSchoolNumber,user_type,submission_date)  
+             values(#{account},#{password},#{userName},#{toSchoolNumber},#{user_type},#{submission_date})  
+    </insert>
+    
+    <!-- 返回list 的select 语句，注意 resultMap 的值是指向前面定义好的 -->
+    <select id="getAllUsers" resultMap="resultListUsers">
+        select * from users
+    </select>
+    
+    <!-- 返回list -->
+    <resultMap type="Users" id="resultListUsers">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="userName" property="userName" />
+        <result column="toSchoolNumber" property="toSchoolNumber" />
+        <result column="user_type" property="user_type" />
+        <result column="submission_date" property="submission_date" />
+    </resultMap>
+    
+    <!-- 删除用户 -->
+    <select id="deleteUserById" parameterType="String">
+    	delete from users where id = #{id};
+    </select>
+    
+    <!-- 返回查询得到的总记录 -->
+    <select id="selectTotalCount" resultType="int">
+    	select COUNT(*) from users;
+    </select>
+    
+    <!-- 分页 -->
+    <select id="selectUsersListPage" resultMap="resultListUsers">
+        select * from users LIMIT #{offset},#{limit}
+    </select>
+    
+    <!-- 改 -->
+    <update id="updateUsers" parameterType="Users">
+    	update users set account=#{account},password=#{password},userName=#{userName},toSchoolNumber=#{toSchoolNumber},user_type=#{user_type} where id=#{id};
+    </update>
+    
+    <!-- 根据学院代号查询学院 -->
+    <select id="selectBySchoolNumber" parameterType="String" resultType="String">
+    	select schoolName from schools where schoolNumber=#{toSchoolNumber};
+    </select>
+    
+    <!-- 模糊查询 -->
+    <select id="selectByAny" resultMap="resultListUsers">
+    	select * from users 
+    	<where>
+    		<if test="userName!=null and userName!=''">userName like CONCAT(CONCAT('%',#{userName}),'%')</if>
+    		<if test="toSchoolNumber!=null and toSchoolNumber!=''">and toSchoolNumber like CONCAT(CONCAT('%',#{toSchoolNumber}),'%')</if>
+    		<if test="user_type!=null and user_type!=''">and user_type like CONCAT(CONCAT('%',#{user_type}),'%')</if>
+		</where>
+    	LIMIT #{offset},#{limit}
+    </select>
+    
+    <select id="selectTotalSearchCount" parameterType="Users" resultType="int">
+    	select COUNT(*) from users 
+    	<where>
+    		<if test="userName!=null and userName!=''">and account like CONCAT(CONCAT('%',#{userName}),'%')</if>
+    		<if test="toSchoolNumber!=null and toSchoolNumber!=''">and toSchoolNumber like CONCAT(CONCAT('%',#{toSchoolNumber}),'%')</if>
+    		<if test="user_type!=null and user_type!=''">and user_type like CONCAT(CONCAT('%',#{user_type}),'%')</if>
+    	</where>
+    </select>
+    
+    
+    <!-- 临时应对措施 上传头像 -->
+    <update id="updateImg" parameterType="Users">
+    	update users set imgPath=#{imgPath} where account=#{account};
+    </update>
+</mapper>

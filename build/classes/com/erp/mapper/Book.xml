@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.erp.inter.BookOperation">
+	
+	<!-- add book -->
+	<insert id="addBook" parameterType="Book" 
+        useGeneratedKeys="true" keyProperty="id">
+		insert into library(bookType,isbn,bookName,bookAuthor,publishTime,publishCompany,bookInfo)
+		values(#{bookType},#{isbn},#{bookName},#{bookAuthor},#{publishTime},#{publishCompany},#{bookInfo});
+	</insert>
+	
+	<!-- update -->
+	<update id="updateBook" parameterType="Book">
+		update library set bookType=#{bookType},isbn=#{isbn},bookName=#{bookName},bookAuthor=#{bookAuthor},publishTime=#{publishTime},publishCompany=#{publishCompany},bookInfo=#{bookInfo} where id=#{id};
+	</update>
+	
+	<!-- delete -->
+	<select id="deleteBook" parameterType="String">
+		delete from library where id=#{id};
+	</select>
+	
+	<!-- total count -->
+	<select id="getTotalNumber" resultType="int">
+		select COUNT(*) from library;
+	</select>
+	
+	<!-- 分页 -->
+	<select id="selectBookListPage" resultMap="resultListBook">
+		select * from library LIMIT #{offset},#{limit};
+	</select>
+	
+	<!-- resultMap -->
+	<resultMap type="Book" id="resultListBook">
+		<id column="id" property="id" />
+		<result column="bookType" property="bookType" />
+		<result column="isbn" property="isbn" />
+		<result column="bookName" property="bookName"/>
+		<result column="bookAuthor" property="bookAuthor"/>
+		<result column="publishTime" property="publishTime"/>
+		<result column="publishCompany" property="publishCompany"/>
+		<result column="bookInfo" property="bookInfo"/>
+	</resultMap>
+	
+	<!-- 借书 -->
+	<insert id="borrowBookData" parameterType="BorrowBookData" useGeneratedKeys="true" keyProperty="id">
+		insert into borrowReturnBook (userAccount,bookIsbn,bookName,borrowDate,returnDate)
+		values(#{userAccount},#{bookIsbn},#{bookName},#{borrowDate},#{returnDate});
+	</insert>
+	
+	<!-- 模糊搜索 -->
+	<select id="selectByAnyBook" parameterType="java.util.Map" resultMap="resultListBook">
+    	select * from library 
+    	<where>
+    		<if test="bookType!=null and bookType!=''">bookType like CONCAT(CONCAT('%',#{bookType}),'%')</if>
+    		<if test="isbn!=null and isbn!=''">and isbn like CONCAT(CONCAT('%',#{isbn}),'%')</if>
+    		<if test="bookName!=null and bookName!=''">and bookName like CONCAT(CONCAT('%',#{bookName}),'%')</if>
+		</where>
+    	LIMIT #{offset},#{limit}
+    </select>
+	
+	<!-- 我的借书列表 -->
+	<select id="selectMyBorrowBook" resultMap="resultListMyBorrowBook">
+		select * from borrowReturnBook where userAccount=#{userAccount} LIMIT #{offset},#{limit};
+	</select>
+	<resultMap id="resultListMyBorrowBook" type="borrowBookData">
+		<id column="id" property="id" />
+        <result column="bookType" property="bookType" />
+        <result column="bookIsbn" property="bookIsbn" />
+        <result column="bookName" property="bookName" />
+        <result column="borrowDate" property="borrowDate" />
+	</resultMap>
+	<!-- 还书操作 -->
+	<select id="returnMyBorrowBook" parameterType="BorrowBookData">
+		delete from borrowReturnBook where userAccount=#{userAccount} and bookIsbn=#{bookIsbn};
+	</select>
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.erp.inter.CurriculumOperation">
+	<!-- addCurriculum -->
+	<insert id="addCurriculum" parameterType="Curriculum" 
+        useGeneratedKeys="true" keyProperty="id"> 
+        insert into curriculums(school,specialty,curriculumNumber,curriculumType,curriculumName,credit,period,startSemester,location)  
+             values(#{school},#{specialty},#{curriculumNumber},#{curriculumType},#{curriculumName},#{credit},#{period},#{startSemester},#{location})  
+    </insert>
+    
+    <!-- updateCurriculum -->
+    <update id="updateCurriculum" parameterType="Curriculum">
+    	update curriculums set school=#{school},specialty=#{specialty},curriculumNumber=#{curriculumNumber},curriculumType=#{curriculumType},curriculumName=#{curriculumName},credit=#{credit},period=#{period},startSemester=#{startSemester},location=#{location} where id=#{id}
+    </update>
+    
+    <!-- 返回list -->
+    <resultMap type="Curriculum" id="resultListCurriculum">
+        <id column="id" property="id" />
+        <result column="school" property="school" />
+        <result column="specialty" property="specialty" />
+        <result column="curriculumNumber" property="curriculumNumber" />
+        <result column="curriculumType" property="curriculumType" />
+        <result column="curriculumName" property="curriculumName" />
+        <result column="credit" property="credit" />
+        <result column="period" property="period" />
+        <result column="startSemester" property="startSemester" />
+        <result column="location" property="location" />
+    </resultMap>
+    
+    <!-- 返回查询得到的总记录 -->
+    <select id="selectCurriculumTotalCount" resultType="int">
+    	select COUNT(*) from curriculums;
+    </select>
+    
+    <!-- curriculum list 分页 -->
+    <select id="selectCurriculumListPage" resultMap="resultListCurriculum">
+        select * from curriculums LIMIT #{offset},#{limit}
+    </select>
+    
+    <!-- delete curriculum -->
+    <select id="deleteCurriculumById" parameterType="String">
+    	delete from curriculums where id = #{id};
+    </select>
+    
+    <!-- selectByCurriculumNumber -->
+    <select id="selectByCurriculumNumber" parameterType="java.util.List" resultMap="resultListCurriculum">
+    	select * from curriculums where curriculumNumber in 
+    	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+    		#{item.curriculumNumber}
+    	</foreach>
+    </select>
+    
+    <!-- 选课程插入数据 -->
+    <insert id="chooseCurriculum" parameterType="StudentCurriculum" useGeneratedKeys="true" keyProperty="id">
+        insert into StudentCurriculum (studentNumber,curriculumNumber,goals)
+        values(#{studentNumber},#{curriculumNumber},#{goals})
+    </insert>
+    
+    <!-- 获取我的课表总数 -->
+    <select id="selectMyCurriculumTotal" resultType="int">
+    	select COUNT(*) from StudentCurriculum where studentNumber=#{account};
+    </select>
+    
+    <!-- myCurriculum list 分页 -->
+    <select id="selectMyCurriculumListPage" resultMap="resultListMyCurriculum">
+        select * from StudentCurriculum where studentNumber=#{account} LIMIT #{offset},#{limit}
+    </select>
+    
+    <!-- 返回list -->
+    <resultMap type="StudentCurriculum" id="resultListMyCurriculum">
+        <id column="id" property="id" />
+        <result column="studentNumber" property="studentNumber" />
+        <result column="curriculumNumber" property="curriculumNumber" />
+        <result column="goals" property="goals" />
+    </resultMap>
+    
+    <!-- delete myCurriculum by curriculumNumber -->
+    <delete id="deleteMyCurriculumByNumber" parameterType="String">
+    	delete from StudentCurriculum where curriculumNumber=#{curriculumNumber}
+    </delete>
+    
+      <!-- 获取所有学院 -->
+    <select id="selectSchools" resultMap="resultListSchools">
+    	select * from schools;
+    </select>
+    <!-- 返回schoollist -->
+    <resultMap type="School" id="resultListSchools">
+        <id column="id" property="id" />
+        <result column="schoolName" property="schoolName" />
+        <result column="schoolNumber" property="schoolNumber" />
+    </resultMap>
+    
+      <!-- 获取学院下的专业 -->
+    <select id="selectSpecialties" resultMap="resultListSpecialties">
+    	select * from specialties where toSchoolNumber=#{toSchoolNumber};
+    </select>
+    <!-- 返回schoollist -->
+    <resultMap type="Specialty" id="resultListSpecialties">
+        <id column="id" property="id" />
+        <result column="specialtyName" property="specialtyName" />
+        <result column="specialtyNumber" property="specialtyNumber" />
+        <result column="toSchoolNumber" property="toSchoolNumber" />
+    </resultMap>
+    
+    
+    <!-- 通过学院代号查询课程 -->
+    <select id="selectCurriculumListPageByschoolNumber" resultMap="resultListCurriculum">
+    	select * from curriculums where school=#{schoolNumber} LIMIT #{offset},#{limit}
+    </select>
+    
+    <!-- 查询所属学院的课程 -->
+    <select id="selectTotalBySchoolNumber" parameterType="String" resultType="int">
+    	select COUNT(*) from curriculums where school=#{schoolNumber};
+    </select>
+    
+    
+    
+    <!-- 模糊查询 -->
+    <select id="selectByAnyCurriculum" parameterType="java.util.Map" resultMap="resultListCurriculum">
+    	select * from curriculums 
+    	<where>
+    		<if test="curriculumNumber!=null and curriculumNumber!=''">curriculumNumber like CONCAT(CONCAT('%',#{curriculumNumber}),'%')</if>
+    		<if test="curriculumType!=null and curriculumType!=''">and curriculumType like CONCAT(CONCAT('%',#{curriculumType}),'%')</if>
+    		<if test="curriculumName!=null and curriculumName!=''">and curriculumName like CONCAT(CONCAT('%',#{curriculumName}),'%')</if>
+		</where>
+    	LIMIT #{offset},#{limit}
+    </select>
+    
+    <select id="selectTotalSearchCuriculumCount" parameterType="map" resultType="int">
+    	select COUNT(*) from curriculums 
+    	<where>
+    		<if test="curriculumNumber!=null and curriculumNumber!=''">curriculumNumber like CONCAT(CONCAT('%',#{curriculumNumber}),'%')</if>
+    		<if test="curriculumType!=null and curriculumType!=''">and curriculumType like CONCAT(CONCAT('%',#{curriculumType}),'%')</if>
+    		<if test="curriculumName!=null and curriculumName!=''">and curriculumName like CONCAT(CONCAT('%',#{curriculumName}),'%')</if>
+    	</where>
+    </select>
+</mapper>

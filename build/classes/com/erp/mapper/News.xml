@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.erp.inter.NewsOperation">
+	<!-- add news -->
+	<insert id="addNews" parameterType="News" 
+        useGeneratedKeys="true" keyProperty="id"> 
+        insert into news(title,author,newsType,content,publish_date)  
+             values(#{title},#{author},#{newsType},#{content},#{publish_date})  
+    </insert>
+    
+    <!-- 返回list -->
+    <resultMap type="News" id="resultListNews">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="author" property="author" />
+        <result column="newsType" property="newsType" />
+        <result column="content" property="content" />
+        <result column="publish_date" property="publish_date" />
+    </resultMap>
+    
+    <!-- 返回查询得到的总记录 -->
+    <select id="selectNewsTotalCount" resultType="int">
+    	select COUNT(*) from news;
+    </select>
+    
+    <!-- news list 分页 -->
+    <select id="selectNewsListPage" resultMap="resultListNews">
+        select news.id,news.title,news.author,news.newsType,news.content,news.publish_date from news LIMIT #{offset},#{limit}
+    </select>
+    
+    <!-- 修改新闻 -->
+    <update id="updateNews" parameterType="News">
+    	update news set title=#{title},author=#{author},newsType=#{newsType},content=#{content},publish_date=#{publish_date} where id=#{id};
+    </update>
+    
+    <!-- 删除新闻 -->
+    <select id="deleteNewsById" parameterType="String">
+    	delete from news where id = #{id};
+    </select>
+</mapper>

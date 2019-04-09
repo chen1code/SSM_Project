@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases> 
+        <typeAlias alias="Users" type="com.erp.model.Users"/>
+        <typeAlias alias="News" type="com.erp.model.News"/>
+        <typeAlias alias="Curriculum" type="com.erp.model.Curriculum"/>
+        <typeAlias alias="Book" type="com.erp.model.Book"/>
+        <typeAlias alias="StudentCurriculum" type="com.erp.model.StudentCurriculum"/>
+        <typeAlias alias="School" type="com.erp.model.School"/>
+        <typeAlias alias="Specialty" type="com.erp.model.Specialty"/>
+        <typeAlias alias="BorrowBookData" type="com.erp.model.BorrowBookData"/>
+    </typeAliases> 
+	
+	<!-- <plugins>
+        <plugin interceptor="com.erp.util.PagePlugin">
+            <property name="dialect" value="mysql" />
+            <property name="pageSqlId" value=".*ListPage.*" />
+        </plugin>
+    </plugins> -->
+	
+    <!-- <environments default="development">
+        <environment id="development">
+        <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+            <property name="driver" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://127.0.0.1:3306/users?useSSL=false&amp;serverTimezone=UTC" />
+            <property name="username" value="root"/>
+            <property name="password" value="940110"/>
+            </dataSource>
+        </environment>
+    </environments>
+    
+     <mappers>
+        <mapper resource="com/erp/model/User.xml"/>
+    </mappers>  -->
+</configuration>
