@@ -12,7 +12,7 @@
 ### part3: 课程管理相关模块，可以查找课程，添加课程到自己的课程列表，主要是增删改查的一些操作
 
 <img src="https://github.com/chen1code/SSM_Project/blob/master/image/curri_list.png" width="700px">
-<img src="https://github.com/chen1code/SSM_Project/blob/master/image/choose_curri.pn" width="700px">
+<img src="https://github.com/chen1code/SSM_Project/blob/master/image/choose_curri.png" width="700px">
 <img src="https://github.com/chen1code/SSM_Project/blob/master/image/curriculum.png" width="700px">
 
 ### part4: 图书的借阅还书
