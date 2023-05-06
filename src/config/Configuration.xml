@@ -13,7 +13,7 @@
         <typeAlias alias="Specialty" type="com.erp.model.Specialty"/>
         <typeAlias alias="BorrowBookData" type="com.erp.model.BorrowBookData"/>
     </typeAliases> 
-	
+
 	<!-- <plugins>
         <plugin interceptor="com.erp.util.PagePlugin">
             <property name="dialect" value="mysql" />
